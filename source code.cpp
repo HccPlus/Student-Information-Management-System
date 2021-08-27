@@ -5,169 +5,176 @@ using namespace std;
 
 class Student
 {
-	private:
-		char *name = new char[8];//ĞÕÃû 
-		char gender;//ĞÔ±ğ£¨M£ºÄĞ£¬F£ºÅ®£¬U£ºÎ´Öª£© 
-		long long number;//Ñ§ºÅ 
-		char *ClassAndGrade = new char[16];//°à¼¶ 
-		
-		//Ñ§ÉúĞÅÏ¢ĞŞ¸Äº¯Êı£º 
-		void ChangeName()
+private:
+	char* name = new char[8];//å§“å 
+	char gender;//æ€§åˆ«ï¼ˆMï¼šç”·ï¼ŒFï¼šå¥³ï¼ŒUï¼šæœªçŸ¥ï¼‰ 
+	long long number;//å­¦å· 
+	char* ClassAndGrade = new char[16];//ç­çº§ 
+
+	//å­¦ç”Ÿä¿¡æ¯ä¿®æ”¹å‡½æ•°ï¼š 
+	void ChangeName()
+	{
+		char* i = new char[8];
+		cout << "è¯·è¾“å…¥å­¦ç”Ÿå§“åï¼š" << endl;
+		cin >> i;
+		while (getchar() != '\n');//æ¸…ç©ºç¼“å†²åŒºï¼Œé˜²æ­¢ç”¨æˆ·è¯¯è¾“å…¥ 
+		strcpy_s(name, 8, i);
+		delete[] i;
+	}
+	void ChangeGender()
+	{
+		char j;
+		char* gd = new char[2];//ç”¨æ¥ä¸´æ—¶å­˜å‚¨â€œç”·â€ã€â€œå¥³â€å­—ç¬¦ 
+		bool ck = false;//ç”¨äºåˆ¤æ–­ç¨‹åºæ˜¯å¦æ‰§è¡Œè¿‡ 
+		bool b = true;//åˆ¤æ–­è¾“å…¥æ˜¯å¦æ­£ç¡® 
+		cout << "è¯·è¾“å…¥å­¦ç”Ÿæ€§åˆ«ï¼š" << endl;
+		do
 		{
-			char *i = new char[8];
-			cout << "ÇëÊäÈëÑ§ÉúĞÕÃû£º" << endl; 
-			cin >> i;
-			while (getchar()!='\n');//Çå¿Õ»º³åÇø£¬·ÀÖ¹ÓÃ»§ÎóÊäÈë 
-			strcpy(name,i);
-			delete i;
-		}
-		void ChangeGender()
+			b = true;
+			if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
+			cin >> gd;
+			while (getchar() != '\n');
+			if (strcmp(gd, "M") == 0) j = 'M';
+			else if (strcmp(gd, "F") == 0) j = 'F';
+			else if (strcmp(gd, "ç”·") == 0) j = 'M';
+			else if (strcmp(gd, "å¥³") == 0) j = 'F';
+			else b = false;
+			ck = true;
+		} 			while (!b);
+		gender = j;
+	}
+	void ChangeNumber()
+	{
+		long long k;
+		bool ck = false;
+		cout << "è¯·è¾“å…¥å­¦ç”Ÿå­¦å·ï¼š" << endl;
+		do
 		{
-			char j;
-			char *gd = new char[2];//ÓÃÀ´ÁÙÊ±´æ´¢¡°ÄĞ¡±¡¢¡°Å®¡±×Ö·û 
-			bool ck = false;//ÓÃÓÚÅĞ¶Ï³ÌĞòÊÇ·ñÖ´ĞĞ¹ı 
-			bool b = true;//ÅĞ¶ÏÊäÈëÊÇ·ñÕıÈ· 
-			cout << "ÇëÊäÈëÑ§ÉúĞÔ±ğ£º" << endl;
-			do
-			{
-				b = true;
-				if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl; 
-				cin >> gd;
-				while (getchar()!='\n');
-				if (strcmp(gd,"M")==0) j = 'M';
-				else if (strcmp(gd,"F")==0) j = 'F';
-				else if (strcmp(gd,"ÄĞ")==0) j = 'M';
-				else if (strcmp(gd,"Å®")==0) j = 'F';
-				else b = false;
-				ck = true;
-			}
-			while(!b);
-			gender=j;
-		}
-		void ChangeNumber()
+			if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
+			cin >> k;
+			while (getchar() != '\n');
+			ck = true;
+		} 			while (k < 1000 || k>922337203685477580);
+		number = k;
+	}
+	void ChangeClassAndGrade()
+	{
+		char* l = new char[16];
+		cout << "è¯·è¾“å…¥å­¦ç”Ÿç­çº§ï¼š" << endl;
+		cin >> l;
+		while (getchar() != '\n');
+		strcpy_s(ClassAndGrade, 16, l);
+		delete[] l;
+	}
+
+public:
+
+	static int sum;//å­¦ç”Ÿæ€»é‡ 
+
+	Student(const char* i, char j = 'U', long long k = 0, const char* l = "æœªçŸ¥")//å­¦ç”Ÿç±»æ„é€ å‡½æ•° 
+	{
+		strcpy_s(name, 8, i);
+		gender = j;
+		number = k;
+		strcpy_s(ClassAndGrade, 16, l);
+		sum++;
+		//cout << "*å­¦ç”Ÿæ·»åŠ æˆåŠŸ" << endl;
+	}
+	Student()//æ— å‚æ•°çš„å­¦ç”Ÿç±»æ„é€ å‡½æ•° 
+	{
+		strcpy_s(name, 8, "æœªçŸ¥");
+		gender = 'U';
+		number = 0;
+		strcpy_s(ClassAndGrade, 16, "æœªçŸ¥");
+		sum++;
+		//cout << "*å­¦ç”Ÿæ·»åŠ æˆåŠŸï¼ˆæœªè¾“å…¥ä¿¡æ¯ï¼‰" << endl;
+	}
+
+	long long ReturnNumber()//ç”¨äºè¿”å›å­¦ç”Ÿå­¦å· 
+	{
+		return number;
+	}
+
+	bool ChangeData()//ä¿®æ”¹å­¦ç”Ÿä¿¡æ¯çš„å‡½æ•° 
+	{
+		char c;//ç”¨äºåˆ¤æ–­ç”¨æˆ·æƒ³è¦ä¿®æ”¹çš„æ•°æ® 
+		bool ck = false;
+		bool change = false;
+		cout << endl;
+		cout << "è¯·è¾“å…¥è¦å†™å…¥çš„æ•°æ®ï¼š";
+		cout << "ï¼ˆAï¼šæ‰€æœ‰æ•°æ®ï¼ŒNï¼šå§“åï¼ŒGï¼šæ€§åˆ«ï¼ŒBï¼šå­¦å·ï¼ŒCï¼šç­çº§ï¼ŒLï¼šå–æ¶ˆå†™å…¥ï¼‰" << endl;
+		do
 		{
-			long long k;
-			bool ck = false;
-			cout << "ÇëÊäÈëÑ§ÉúÑ§ºÅ£º" << endl;
-			do
-			{
-				if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
-				cin >> k;
-				while (getchar()!='\n');
-				ck = true;
-			}
-			while(k<1000||k>922337203685477580);
-			number=k;
-		}
-		void ChangeClassAndGrade()
+			if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
+			cin >> c;
+			while (getchar() != '\n');
+			ck = true;
+		} 			while (c != 'N' && c != 'G' && c != 'B' && c != 'C' && c != 'A' && c != 'L');
+		//ä¿®æ”¹å­¦ç”Ÿä¿¡æ¯ï¼š 
+		if (c == 'N' || c == 'A') ChangeName();
+		if (c == 'G' || c == 'A') ChangeGender();
+		if (c == 'B' || c == 'A') ChangeNumber();
+		if (c == 'C' || c == 'A') ChangeClassAndGrade();
+		if (c == 'L') cout << "å·²å–æ¶ˆ" << endl;
+		else
 		{
-			char *l = new char[16];
-			cout << "ÇëÊäÈëÑ§Éú°à¼¶£º" << endl; 
-			cin >> l;
-			while (getchar()!='\n');
-			strcpy(ClassAndGrade,l);
-			delete l;
+			change = true;
+			cout << "å†™å…¥å®Œæˆï¼" << endl;
 		}
-		
-	public:
-		
-		static int sum;//Ñ§Éú×ÜÁ¿ 
-		
-		Student(const char* i, char j = 'U', long long k = 0, const char* l = "Î´Öª")//Ñ§ÉúÀà¹¹Ôìº¯Êı 
+		cout << endl;
+		return change;
+	}
+
+	void ViewData()//æ˜¾ç¤ºå•ä¸ªå­¦ç”Ÿä¿¡æ¯çš„å‡½æ•° 
+	{
+		cout << endl;
+		cout << "å­¦ç”Ÿå§“åï¼š\t";
+		cout << name << endl;
+		cout << "å­¦ç”Ÿæ€§åˆ«ï¼š\t";
+		if (gender == 'M') cout << "ç”·" << endl;
+		else if (gender == 'F') cout << "å¥³" << endl;
+		else cout << "æœªçŸ¥" << endl;
+		cout << "å­¦ç”Ÿå­¦å·ï¼š\t";
+		cout << number << endl;
+
+		cout << "å­¦ç”Ÿç­çº§ï¼š\t";
+		if (strlen(ClassAndGrade) <= 2)
 		{
-			strcpy(name,i);
-			gender=j;
-			number=k;
-			strcpy(ClassAndGrade,l);
-			sum++;
-			//cout << "*Ñ§ÉúÌí¼Ó³É¹¦" << endl;
+			cout << ClassAndGrade << "ç­" << endl;
 		}
-		Student()//ÎŞ²ÎÊıµÄÑ§ÉúÀà¹¹Ôìº¯Êı 
+		else
 		{
-			strcpy(name,"Î´Öª");
-			gender='U';
-			number=0;
-			strcpy(ClassAndGrade,"Î´Öª");
-			sum++;
-			//cout << "*Ñ§ÉúÌí¼Ó³É¹¦£¨Î´ÊäÈëĞÅÏ¢£©" << endl;
+			cout << ClassAndGrade << endl;
 		}
-		
-		long long ReturnNumber()//ÓÃÓÚ·µ»ØÑ§ÉúÑ§ºÅ 
-		{
-			return number;
-		}
-		
-		bool ChangeData()//ĞŞ¸ÄÑ§ÉúĞÅÏ¢µÄº¯Êı 
-		{
-			char c;//ÓÃÓÚÅĞ¶ÏÓÃ»§ÏëÒªĞŞ¸ÄµÄÊı¾İ 
-			bool ck = false; 
-			bool change = false;
-			cout << endl;
-			cout << "ÇëÊäÈëÒªĞ´ÈëµÄÊı¾İ£º";
-			cout << "£¨N£ºĞÕÃû£¬G£ºĞÔ±ğ£¬B£ºÑ§ºÅ£¬C£º°à¼¶£¬A£ºËùÓĞÊı¾İ£¬L£ºÈ¡ÏûĞ´Èë£©" << endl;
-			do
-			{
-				if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
-				cin >> c;
-				while (getchar()!='\n');
-				ck = true;
-			}
-			while(c!='N'&&c!='G'&&c!='B'&&c!='C'&&c!='A'&&c!='L');
-			//ĞŞ¸ÄÑ§ÉúĞÅÏ¢£º 
-			if (c=='N'||c=='A') ChangeName();
-			if (c=='G'||c=='A') ChangeGender();
-			if (c=='B'||c=='A') ChangeNumber();
-			if (c=='C'||c=='A') ChangeClassAndGrade();
-			if (c=='L') cout << "ÒÑÈ¡Ïû" << endl;
-			else 
-			{
-				change = true;
-				cout << "Ğ´ÈëÍê³É£¡" << endl;
-			}
-			cout << endl;
-		}
-		
-		void ViewData()//ÏÔÊ¾µ¥¸öÑ§ÉúĞÅÏ¢µÄº¯Êı 
-		{
-			cout << endl;
-			cout << "Ñ§ÉúĞÕÃû£º\t";
-			cout << name << endl;
-			cout << "Ñ§ÉúĞÔ±ğ£º\t";
-			if (gender=='M') cout << "ÄĞ" << endl;
-			else if (gender=='F') cout << "Å®" << endl;
-			else cout << "Î´Öª" << endl;
-			cout << "Ñ§ÉúÑ§ºÅ£º\t";
-			cout << number << endl;
-			
-			cout << "Ñ§Éú°à¼¶£º\t";
-			if (strlen(ClassAndGrade)<=2)
-			{
-				cout << ClassAndGrade << "°à" << endl;
-			}
-			else
-			{
-				cout << ClassAndGrade << endl;
-			}
-			cout << endl;
-		}
-		
-		~Student()//Ñ§ÉúÀàÎö¹¹º¯Êı 
-		{
-			sum--;
-		}
+		cout << endl;
+	}
+
+	~Student()//å­¦ç”Ÿç±»ææ„å‡½æ•° 
+	{
+		sum--;
+		//cout << "å­¦ç”Ÿç±»å·²åˆ é™¤ï¼" << endl;
+	}
 };
+
+struct library//å­˜å‚¨å­¦ç”Ÿä¿¡æ¯çš„åº“é“¾è¡¨
+{
+	Student s;//å­¦ç”Ÿç±»
+	library* next = NULL;//æŒ‡å‘ä¸‹ä¸€ä¸ªå­¦ç”Ÿç»“ç‚¹çš„æŒ‡é’ˆ
+};
+
+library* LHead = NULL;//å­¦ç”Ÿä¿¡æ¯åº“é“¾è¡¨çš„å¤´æŒ‡é’ˆ
 
 int Student::sum = 0;
 
-void ViewAllData();//ÏÔÊ¾ËùÓĞÑ§ÉúĞÅÏ¢µÄº¯Êı 
+void ViewAllData();//æ˜¾ç¤ºæ‰€æœ‰å­¦ç”Ÿä¿¡æ¯çš„å‡½æ•° 
 
-void AddStudent();
+void AddStudent();//æ·»åŠ å­¦ç”Ÿçš„å‡½æ•°
 
-int SerchStudent();
+library* SearchStudent();//æœç´¢å­¦ç”Ÿçš„å‡½æ•°
 
 void DidNotFound();
 
-void DeleteStudent();
+void DeleteStudent();//åˆ é™¤å­¦ç”Ÿçš„å‡½æ•°
 
 void ModStudent();
 
@@ -175,57 +182,54 @@ void LookStudent();
 
 void SumStudent();
 
-Student *p[10000]={NULL};
-int n=-1;//ÓÃÓÚ¼ÇÂ¼´æ´¢Ñ§Éú¶ÔÏóÖ¸ÕëËùÕ¼ÓÃµÄ¿Õ¼ä 
+//Student* p[10000] = { NULL };
+//int n = -1;//ç”¨äºè®°å½•å­˜å‚¨å­¦ç”Ÿå¯¹è±¡æŒ‡é’ˆæ‰€å ç”¨çš„ç©ºé—´ 
 
 int main()
 {
-	char c = ' ';//ÓÃÓÚÅĞ¶ÏÓÃ»§ÏëÒª½øĞĞµÄ²Ù×÷ 
-	cout << "»¶Ó­Ê¹ÓÃVoyageÑ§ÉúĞÅÏ¢¹ÜÀíÏµÍ³£¡" << endl << endl;
+	char c = ' ';//ç”¨äºåˆ¤æ–­ç”¨æˆ·æƒ³è¦è¿›è¡Œçš„æ“ä½œ 
+	cout << "æ¬¢è¿ä½¿ç”¨Voyageå­¦ç”Ÿä¿¡æ¯ç®¡ç†ç³»ç»Ÿï¼" << endl << endl;
 	do
 	{
 		cout << endl;
 		bool ck = false;
-		cout << "ÄúÏë½øĞĞÊ²Ã´²Ù×÷£¿" << endl;;
-		cout << "£¨A£ºÌí¼ÓÑ§Éú  D£ºÉ¾³ıÑ§Éú  M£ºĞŞ¸ÄÑ§ÉúĞÅÏ¢  L£º²é¿´µ¥¸öÑ§ÉúĞÅÏ¢";
-		cout << "  V£ºÏÔÊ¾ËùÓĞÑ§ÉúĞÅÏ¢  S£º²é¿´Ñ§Éú×ÜÊı  C£º¹Ø±Õ³ÌĞò£©" << endl;
+		cout << "æ‚¨æƒ³è¿›è¡Œä»€ä¹ˆæ“ä½œï¼Ÿ" << endl;;
+		cout << "ï¼ˆAï¼šæ·»åŠ å­¦ç”Ÿ  Dï¼šåˆ é™¤å­¦ç”Ÿ  Mï¼šä¿®æ”¹å­¦ç”Ÿä¿¡æ¯  Lï¼šæŸ¥çœ‹å•ä¸ªå­¦ç”Ÿä¿¡æ¯";
+		cout << "  Vï¼šæ˜¾ç¤ºæ‰€æœ‰å­¦ç”Ÿä¿¡æ¯  Sï¼šæŸ¥çœ‹å­¦ç”Ÿæ€»æ•°  Cï¼šå…³é—­ç¨‹åºï¼‰" << endl;
 		do
 		{
-			if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
+			if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
 			cin >> c;
-			while (getchar()!='\n');
+			while (getchar() != '\n');
 			ck = true;
-		}
-		while(c!='A'&&c!='D'&&c!='M'&&c!='L'&&c!='V'&&c!='S'&&c!='C');
-		if (c=='A') AddStudent();
-		else if (c=='D') DeleteStudent();
-		else if (c=='M') ModStudent();
-		else if (c=='L') LookStudent();
-		else if (c=='V') ViewAllData();
-		else if (c=='S') SumStudent();
-		else if (c=='C')
+		} 		while (c != 'A' && c != 'D' && c != 'M' && c != 'L' && c != 'V' && c != 'S' && c != 'C');
+		if (c == 'A') AddStudent();
+		else if (c == 'D') DeleteStudent();
+		else if (c == 'M') ModStudent();
+		else if (c == 'L') LookStudent();
+		else if (c == 'V') ViewAllData();
+		else if (c == 'S') SumStudent();
+		else if (c == 'C')
 		{
 			char close;
 			bool ck = false;
-			cout << "£¡£¡£¡¾¯¸æ£¡£¡£¡" << endl;
-			cout << "ÄúÕæµÄÒª¹Ø±Õ³ÌĞòÂğ£¿";
-			cout << "¸Ã²Ù×÷»áÉ¾³ıËùÓĞÑ§ÉúÊı¾İ£¬";
-			cout << "ÇÒÎŞ·¨»Ö¸´£¡£¡£¡" << endl;
-			cout << "£¨Y£ºÈ·ÈÏ¹Ø±Õ£¬N£ºÊÖ»¬ÁË£¬È¡Ïû¹Ø±Õ£©" << endl;
+			cout << "ï¼ï¼ï¼è­¦å‘Šï¼ï¼ï¼" << endl;
+			cout << "æ‚¨çœŸçš„è¦å…³é—­ç¨‹åºå—ï¼Ÿ";
+			cout << "è¯¥æ“ä½œä¼šåˆ é™¤æ‰€æœ‰å­¦ç”Ÿæ•°æ®ï¼Œ";
+			cout << "ä¸”æ— æ³•æ¢å¤ï¼ï¼ï¼" << endl;
+			cout << "ï¼ˆYï¼šç¡®è®¤å…³é—­ï¼ŒNï¼šæ‰‹æ»‘äº†ï¼Œå–æ¶ˆå…³é—­ï¼‰" << endl;
 			do
 			{
-				if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
+				if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
 				cin >> close;
-				while (getchar()!='\n');
+				while (getchar() != '\n');
 				ck = true;
-			}
-			while(close!='Y'&&close!='N');
-			if (close=='N') c = ' ';
+			} 			while (close != 'Y' && close != 'N');
+			if (close == 'N') c = ' ';
 			cout << endl;
-		} 
-	}
-	while (c!='C');
-	cout << "³ÌĞò¹Ø±Õ£¬ĞÅÏ¢ÒÑÉ¾³ı¡£" << endl;
+		}
+	} 	while (c != 'C');
+	cout << "ç¨‹åºå…³é—­ï¼Œä¿¡æ¯å·²åˆ é™¤ã€‚" << endl;
 	//delete; 
 	return 0;
 }
@@ -233,106 +237,149 @@ int main()
 void ViewAllData()
 {
 	cout << endl;
-	for(int i=0;i<=n;i++)
+	library* s = LHead;
+	if (Student::sum == 0)
 	{
-		Student &s = *p[i];
-		s.ViewData();
+		cout << "æ‚¨çš„ç³»ç»Ÿä¸­ç›®å‰æ²¡æœ‰å­¦ç”Ÿï¼" << endl;
+		return;
 	}
-	if (n==-1) cout << "ÄúµÄÏµÍ³ÖĞÄ¿Ç°Ã»ÓĞÑ§Éú£¡" << endl;
+	while (s)
+	{
+		s->s.ViewData();
+		s = s->next;
+	}
 	cout << endl;
 }
 
 void AddStudent()
 {
 	cout << endl;
-	Student *q = new Student;//ĞÂ½¨¶ÔÏó 
-	Student &s = *q;
-	s.ChangeData();
-	n++;//Ñ¡ÔñÆ÷+1 
-	p[n]=q;//½«ĞÂ½¨¶ÔÏóµÄµØÖ·Ğ´ÈëÊı×é 
+	library* s = new library;
+	s->s.ChangeData();
+	s->next = LHead;
+	LHead = s;
 	cout << endl;
 }
 
-int SerchStudent()
+library* SearchStudent()
 {
-	char c;//ÓÃÓÚÑ¡ÔñÓÃ»§µÄËÑË÷·½Ê½ 
+	char c;//ç”¨äºé€‰æ‹©ç”¨æˆ·çš„æœç´¢æ–¹å¼ 
 	bool b = false;
-	int i=0;
+	library* s = LHead;
 	cout << endl;
-	if (n==-1)
+	if (Student::sum == 0)
 	{
-		cout << "ÄúµÄÏµÍ³ÖĞÄ¿Ç°Ã»ÓĞÑ§Éú£¡" << endl;
-		return -1; 
+		cout << "æ‚¨çš„ç³»ç»Ÿä¸­ç›®å‰æ²¡æœ‰å­¦ç”Ÿï¼" << endl;
+		return NULL;
 	}
 	do
 	{
-		if (b) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl; 
-		cout << "ÄúÏëÍ¨¹ıÊ²Ã´Êı¾İÀ´ËÑË÷Ñ§Éú£¿";
-		cout << "£¨N£ºĞÕÃû£¬B£ºÑ§ºÅ£©" << endl;
+		if (b) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
+		cout << "æ‚¨æƒ³é€šè¿‡ä»€ä¹ˆæ•°æ®æ¥æœç´¢å­¦ç”Ÿï¼Ÿ";
+		cout << "ï¼ˆNï¼šå§“åï¼ŒBï¼šå­¦å·ï¼‰" << endl;
 		cin >> c;
-		while (getchar()!='\n');
-		if (c=='N')
+		while (getchar() != '\n');
+		if (c == 'N')
 		{
-			cout << "±§Ç¸£¬¸Ã³ÌĞòÔİ²»Ö§³Ö¸Ã¹¦ÄÜ£¬";
-			cout << "¾´ÇëÆÚ´ıºóĞø°æ±¾/(¨Òo¨Ò)/~~" << endl;
-			i=-1;
-			/* 
+			cout << "æŠ±æ­‰ï¼Œè¯¥ç¨‹åºæš‚ä¸æ”¯æŒè¯¥åŠŸèƒ½ï¼Œ";
+			cout << "æ•¬è¯·æœŸå¾…åç»­ç‰ˆæœ¬/(ã„’oã„’)/~~" << endl;
+			s = NULL;
+			/*
 			char *m = new char[8];
-			for(int i=0;i<=n;i++)//±éÀúËùÓĞ¶ÔÏó 
+			for(int i=0;i<=n;i++)//éå†æ‰€æœ‰å¯¹è±¡
 			{
-				if (strcmp(p[i]->name, m)) continue;//±È½ÏĞÕÃûÊÇ·ñÏàÍ¬ 
+				if (strcmp(p[i]->name, m)) continue;//æ¯”è¾ƒå§“åæ˜¯å¦ç›¸åŒ
 				else
 				{
-					Student *q = new Student;//ĞÂ½¨¶ÔÏó 
+					Student *q = new Student;//æ–°å»ºå¯¹è±¡
 					Student &s = *q;
 				}
 			}
-			cout << "ÇëÊäÈëÑ§ÉúĞÕÃû£º" << endl;
+			cout << "è¯·è¾“å…¥å­¦ç”Ÿå§“åï¼š" << endl;
 			cin >> m;
 			while (getchar()!='\n');
 			*/
 		}
-		else if (c=='B')
+		else if (c == 'B')
 		{
 			long long m0;
 			bool bl = false;
-			cout << "ÇëÊäÈëÑ§ÉúÑ§ºÅ£º" << endl;
+			cout << "è¯·è¾“å…¥å­¦ç”Ÿå­¦å·ï¼š" << endl;
 			cin >> m0;
-			while (getchar()!='\n');
-			for (i;i<=n;i++)//±éÀúËùÓĞ¶ÔÏó 
+			while (getchar() != '\n');
+			while (s)//éå†æ‰€æœ‰å¯¹è±¡ 
 			{
-				Student &s = *p[i];
-				if(m0==s.ReturnNumber())
+				if (m0 == s->s.ReturnNumber())
 				{
 					bl = true;
 					break;
 				}
-				else continue;
+				else
+				{
+					s = s->next;
+				}
 			}
 			if (!bl)
 			{
-				i = -1;
-				cout << "Ã»ÓĞËÑË÷µ½¸ÃÑ§Éú£¡" << endl;
+				s = NULL;
+				cout << "æ²¡æœ‰æœç´¢åˆ°è¯¥å­¦ç”Ÿï¼" << endl;
 			}
 		}
 		b = true;
-	}
-	while (c!='N'&&c!='B');
+	} 	while (c != 'N' && c != 'B');
 	cout << endl;
-	return i;
+	return s;
 }
 
 void DidNotFound()
 {
-	cout << "Ã»ÓĞÕÒµ½¸ÃÑ§Éú£¡" << endl;
+	cout << "æ²¡æœ‰æ‰¾åˆ°è¯¥å­¦ç”Ÿï¼" << endl;
 }
-
 
 void DeleteStudent()
 {
 	cout << endl;
-	cout << "±§Ç¸£¬¸Ã³ÌĞòÔİ²»Ö§³Ö¸Ã¹¦ÄÜ£¬";
-	cout << "¾´ÇëÆÚ´ıºóĞø°æ±¾/(¨Òo¨Ò)/~~" << endl;
+	char c;
+	bool ck = false;
+	library* s = SearchStudent();
+	if (s == NULL) return;
+	s->s.ViewData();
+	cout << "ç¡®è®¤åˆ é™¤å—ï¼Ÿ";
+	cout << "ï¼ˆYï¼šç¡®è®¤ï¼ŒNï¼šå–æ¶ˆï¼‰" << endl;
+	do
+	{
+		if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
+		cin >> c;
+		while (getchar() != '\n');
+		ck = true;
+	}
+	while (c != 'Y' && c != 'N');
+	if (c == 'Y')
+	{
+		library* p = LHead;
+		if (Student::sum == 1)
+		{
+			delete p;
+			cout << "è¯¥å­¦ç”Ÿå·²åˆ é™¤ï¼" << endl;
+		}
+		else if (p == s)
+		{
+			LHead = p->next;
+			delete p;
+			cout << "è¯¥å­¦ç”Ÿå·²åˆ é™¤ï¼" << endl;
+		}
+		else
+		{
+			while (p->next != s)
+			{
+				p = p->next;
+			}
+			p->next = s->next;
+			delete s;
+			cout << "è¯¥å­¦ç”Ÿå·²åˆ é™¤ï¼" << endl;
+		}
+	}
+	else cout << "å·²å–æ¶ˆ" << endl;
 	cout << endl;
 	/*
 	cout << endl;
@@ -342,11 +389,11 @@ void DeleteStudent()
 	if (k==-1) return;
 	Student &s = *p[k];
 	s.ViewData();
-	cout << "ÄúÕæµÄÒªÉ¾³ıÂğ£¿£¨¸Ã²Ù×÷²»¿É»Ö¸´£©";
-	cout << "£¨Y£ºÊÇ£¬N£º·ñ£©" << endl;
+	cout << "æ‚¨çœŸçš„è¦åˆ é™¤å—ï¼Ÿï¼ˆè¯¥æ“ä½œä¸å¯æ¢å¤ï¼‰";
+	cout << "ï¼ˆYï¼šæ˜¯ï¼ŒNï¼šå¦ï¼‰" << endl;
 	do
 	{
-		if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
+		if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
 		cin >> c;
 		while (getchar()!='\n');
 		ck = true;
@@ -358,58 +405,54 @@ void DeleteStudent()
 void ModStudent()
 {
 	cout << endl;
-	int k = SerchStudent();
+	library* s = SearchStudent();
 	char c;
 	bool ck = false;
 	bool change;
-	if (k==-1)
+	if (s == NULL)
 	{
 		cout << endl;
 		return;
 	}
-	Student &s = *p[k];
-	s.ViewData();
-	cout << "È·ÈÏĞŞ¸ÄÂğ£¿";
-	cout << "£¨Y£ºÈ·ÈÏ£¬N£ºÈ¡Ïû£©" << endl;
+	s->s.ViewData();
+	cout << "ç¡®è®¤ä¿®æ”¹å—ï¼Ÿ";
+	cout << "ï¼ˆYï¼šç¡®è®¤ï¼ŒNï¼šå–æ¶ˆï¼‰" << endl;
 	do
 	{
-		if (ck) cout << "ÊäÈëÓĞÎó£¬ÇëÖØĞÂÊäÈë£º" << endl;
+		if (ck) cout << "è¾“å…¥æœ‰è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š" << endl;
 		cin >> c;
-		while (getchar()!='\n');
+		while (getchar() != '\n');
 		ck = true;
-	}
-	while(c!='Y'&&c!='N');
-	if (c=='Y')
+	} 	while (c != 'Y' && c != 'N');
+	if (c == 'Y')
 	{
-		change = s.ChangeData();
-		if (change) cout << "ĞŞ¸ÄÍê³É£¡" << endl;
+		change = s->s.ChangeData();
+		if (change) cout << "ä¿®æ”¹å®Œæˆï¼" << endl;
 	}
-	else cout << "ÒÑÈ¡Ïû" << endl;
+	else cout << "å·²å–æ¶ˆ" << endl;
 	cout << endl;
 }
 
 void LookStudent()
 {
 	cout << endl;
-	int k = SerchStudent();
-	if (k==-1)
+	library* s = SearchStudent();
+	if (s == NULL)
 	{
 		cout << endl;
 	}
 	else
 	{
-		Student &s = *p[k];
-		s.ViewData();
+		s->s.ViewData();
 		cout << endl;
 	}
-	
+
 }
 
 void SumStudent()
 {
 	cout << endl;
-	cout << "Ñ§Éú×ÜÊıÎª£º";
-	cout << Student::sum << endl; 
+	cout << "å­¦ç”Ÿæ€»æ•°ä¸ºï¼š";
+	cout << Student::sum << endl;
 	cout << endl;
 }
-

@@ -3,15 +3,22 @@
 
 using namespace std;
 
+void InputNum(int& x);
+
+void InputNum(long long& x);
+
+void InputNum(int& x, int min, int max);
+
 class Student
 {
 private:
 	char* name = new char[8];//姓名 
 	char gender;//性别（M：男，F：女，U：未知） 
 	long long number;//学号 
-	char* ClassAndGrade = new char[16];//班级 
+	char* ClassAndGrade = new char[16];//班级
+	int birthday;
 
-	//学生信息修改函数： 
+	//学生信息修改函数：
 	void ChangeName()
 	{
 		char* i = new char[8];
@@ -40,21 +47,21 @@ private:
 			else if (strcmp(gd, "女") == 0) j = 'F';
 			else b = false;
 			ck = true;
-		} 			while (!b);
+		} while (!b);
 		gender = j;
 	}
 	void ChangeNumber()
 	{
-		long long k;
+		long long k = 0;
 		bool ck = false;
 		cout << "请输入学生学号：" << endl;
 		do
 		{
 			if (ck) cout << "输入有误，请重新输入：" << endl;
-			cin >> k;
+			InputNum(k);
 			while (getchar() != '\n');
 			ck = true;
-		} 			while (k < 1000 || k>922337203685477580);
+		} while (k < 1000 || k>922337203685477580);
 		number = k;
 	}
 	void ChangeClassAndGrade()
@@ -66,17 +73,35 @@ private:
 		strcpy_s(ClassAndGrade, 16, l);
 		delete[] l;
 	}
+	void ChangeDetail()
+	{
+		cout << "可以输入学生生日信息：" << endl;
+		ChangeBirthday();
+	}
+	void ChangeBirthday()
+	{
+		int year, month, day;
+		cout << "请输入出生年份：" << endl;
+		InputNum(year, 1000, 9999);
+		cout << "请输入出生月份：" << endl;
+		InputNum(month, 1, 12);
+		cout << "请输入出生日期：" << endl;
+		InputNum(day, 1, 31);
+		birthday = 10000 * year + 100 * month + day;
+	}
 
 public:
 
 	static int sum;//学生总量 
+	static bool detail;//详细显示模式
 
-	Student(const char* i, char j = 'U', long long k = 0, const char* l = "未知")//学生类构造函数 
+	Student(const char* i, char j = 'U', long long k = 0, const char* l = "未知", int m = 0)//学生类构造函数 
 	{
 		strcpy_s(name, 8, i);
 		gender = j;
 		number = k;
 		strcpy_s(ClassAndGrade, 16, l);
+		birthday = m;
 		sum++;
 		//cout << "*学生添加成功" << endl;
 	}
@@ -86,6 +111,7 @@ public:
 		gender = 'U';
 		number = 0;
 		strcpy_s(ClassAndGrade, 16, "未知");
+		birthday = 0;
 		sum++;
 		//cout << "*学生添加成功（未输入信息）" << endl;
 	}
@@ -95,26 +121,32 @@ public:
 		return number;
 	}
 
+	const char* ReturnName()
+	{
+		return name;
+	}
+
 	bool ChangeData()//修改学生信息的函数 
 	{
-		char c;//用于判断用户想要修改的数据 
+		char c = ' ';//用于判断用户想要修改的数据 
 		bool ck = false;
 		bool change = false;
 		cout << endl;
 		cout << "请输入要写入的数据：";
-		cout << "（A：所有数据，N：姓名，G：性别，B：学号，C：班级，L：取消写入）" << endl;
+		cout << "（A：基本数据，N：姓名，G：性别，B：学号，C：班级，D：详细信息，L：取消写入）" << endl;
 		do
 		{
 			if (ck) cout << "输入有误，请重新输入：" << endl;
 			cin >> c;
 			while (getchar() != '\n');
 			ck = true;
-		} 			while (c != 'N' && c != 'G' && c != 'B' && c != 'C' && c != 'A' && c != 'L');
+		} while (c != 'N' && c != 'G' && c != 'B' && c != 'C' && c != 'A' && c != 'L' && c != 'D');
 		//修改学生信息： 
 		if (c == 'N' || c == 'A') ChangeName();
 		if (c == 'G' || c == 'A') ChangeGender();
 		if (c == 'B' || c == 'A') ChangeNumber();
 		if (c == 'C' || c == 'A') ChangeClassAndGrade();
+		if (c == 'D') ChangeDetail();
 		if (c == 'L') cout << "已取消" << endl;
 		else
 		{
@@ -136,7 +168,6 @@ public:
 		else cout << "未知" << endl;
 		cout << "学生学号：\t";
 		cout << number << endl;
-
 		cout << "学生班级：\t";
 		if (strlen(ClassAndGrade) <= 2)
 		{
@@ -145,6 +176,20 @@ public:
 		else
 		{
 			cout << ClassAndGrade << endl;
+		}
+		if (detail)
+		{
+			if (birthday == 0) cout << "学生生日：\t未知" << endl;
+			else
+			{
+				int year, month, day;
+				year = birthday / 10000;
+				month = (birthday - 10000 * year) / 100;
+				day = birthday - 10000 * year - 100 * month;
+				cout << "学生生日：\t";
+				cout << year << "年" << month << "月" << day << "日" << endl;
+			}
+
 		}
 		cout << endl;
 	}
@@ -165,6 +210,7 @@ struct library//存储学生信息的库链表
 library* LHead = NULL;//学生信息库链表的头指针
 
 int Student::sum = 0;
+bool Student::detail = false;
 
 void ViewAllData();//显示所有学生信息的函数 
 
@@ -182,8 +228,7 @@ void LookStudent();
 
 void SumStudent();
 
-//Student* p[10000] = { NULL };
-//int n = -1;//用于记录存储学生对象指针所占用的空间 
+void Set();
 
 int main()
 {
@@ -195,23 +240,24 @@ int main()
 		bool ck = false;
 		cout << "您想进行什么操作？" << endl;;
 		cout << "（A：添加学生  D：删除学生  M：修改学生信息  L：查看单个学生信息";
-		cout << "  V：显示所有学生信息  S：查看学生总数  C：关闭程序）" << endl;
+		cout << "  V：显示所有学生信息  S：查看学生总数  T：设置  C：关闭程序）" << endl;
 		do
 		{
 			if (ck) cout << "输入有误，请重新输入：" << endl;
 			cin >> c;
 			while (getchar() != '\n');
 			ck = true;
-		} 		while (c != 'A' && c != 'D' && c != 'M' && c != 'L' && c != 'V' && c != 'S' && c != 'C');
+		} while (c != 'A' && c != 'D' && c != 'M' && c != 'L' && c != 'V' && c != 'S' && c != 'C' && c != 'T');
 		if (c == 'A') AddStudent();
 		else if (c == 'D') DeleteStudent();
 		else if (c == 'M') ModStudent();
 		else if (c == 'L') LookStudent();
 		else if (c == 'V') ViewAllData();
 		else if (c == 'S') SumStudent();
+		else if (c == 'T') Set();
 		else if (c == 'C')
 		{
-			char close;
+			char close = ' ';
 			bool ck = false;
 			cout << "！！！警告！！！" << endl;
 			cout << "您真的要关闭程序吗？";
@@ -224,14 +270,64 @@ int main()
 				cin >> close;
 				while (getchar() != '\n');
 				ck = true;
-			} 			while (close != 'Y' && close != 'N');
+			} while (close != 'Y' && close != 'N');
 			if (close == 'N') c = ' ';
 			cout << endl;
 		}
-	} 	while (c != 'C');
+	} while (c != 'C');
+
 	cout << "程序关闭，信息已删除。" << endl;
-	//delete; 
 	return 0;
+}
+
+void InputNum(int& x)
+{
+	bool suc = true;//定义变量记录输入是否成功
+	do
+	{
+		if (!suc) cout << "输入错误！请重新输入：" << endl;
+		cin >> x;
+		suc = !cin.fail();
+		if (!suc)
+		{
+			cin.clear();
+			cin.get();
+		}
+	} 	while (!suc);
+}
+
+void InputNum(long long& x)
+{
+	bool suc = true;//定义变量记录输入是否成功
+	do
+	{
+		if (!suc) cout << "输入错误！请重新输入：" << endl;
+		cin >> x;
+		suc = !cin.fail();
+		if (!suc)
+		{
+			cin.clear();
+			cin.get();
+		}
+	} while (!suc);
+}
+
+void InputNum(int& x, int min, int max)
+{
+	bool suc = true;//定义变量记录输入是否成功
+	bool again = false;//定义变量判断循环是否已经执行过
+	do
+	{
+		if (again) cout << "输入错误！请重新输入：" << endl;
+		again = true;
+		cin >> x;
+		suc = !cin.fail();
+		if (!suc)
+		{
+			cin.clear();
+			cin.get();
+		}
+	} while (!suc && x>=min &&x<=max);
 }
 
 void ViewAllData()
@@ -263,9 +359,9 @@ void AddStudent()
 
 library* SearchStudent()
 {
-	char c;//用于选择用户的搜索方式 
+	char c = ' ';//用于选择用户的搜索方式 
 	bool b = false;
-	library* s = LHead;
+	library* p = LHead;
 	cout << endl;
 	if (Student::sum == 0)
 	{
@@ -281,54 +377,60 @@ library* SearchStudent()
 		while (getchar() != '\n');
 		if (c == 'N')
 		{
-			cout << "抱歉，该程序暂不支持该功能，";
-			cout << "敬请期待后续版本/(ㄒoㄒ)/~~" << endl;
-			s = NULL;
-			/*
-			char *m = new char[8];
-			for(int i=0;i<=n;i++)//遍历所有对象
+			bool suc = false;
+			char* name = new char[8];
+			cout << "请输入学生姓名：" << endl;
+			cin >> name;
+			while (getchar()!='\n');
+			while(p)//遍历所有对象
 			{
-				if (strcmp(p[i]->name, m)) continue;//比较姓名是否相同
+				if (strcmp(p->s.ReturnName(), name))
+				{
+					p = p->next;
+					continue;//比较姓名是否相同
+				}
 				else
 				{
-					Student *q = new Student;//新建对象
-					Student &s = *q;
+					suc = true;
+					break;
 				}
 			}
-			cout << "请输入学生姓名：" << endl;
-			cin >> m;
-			while (getchar()!='\n');
-			*/
+			if (!suc)
+			{
+				p = NULL;
+				cout << "没有搜索到该学生！" << endl;
+			}
+			delete[] name;
 		}
 		else if (c == 'B')
 		{
 			long long m0;
-			bool bl = false;
+			bool suc = false;
 			cout << "请输入学生学号：" << endl;
 			cin >> m0;
 			while (getchar() != '\n');
-			while (s)//遍历所有对象 
+			while (p)//遍历所有对象 
 			{
-				if (m0 == s->s.ReturnNumber())
+				if (m0 == p->s.ReturnNumber())
 				{
-					bl = true;
+					suc = true;
 					break;
 				}
 				else
 				{
-					s = s->next;
+					p = p->next;
 				}
 			}
-			if (!bl)
+			if (!suc)
 			{
-				s = NULL;
+				p = NULL;
 				cout << "没有搜索到该学生！" << endl;
 			}
 		}
 		b = true;
-	} 	while (c != 'N' && c != 'B');
+	} while (c != 'N' && c != 'B');
 	cout << endl;
-	return s;
+	return p;
 }
 
 void DidNotFound()
@@ -339,7 +441,7 @@ void DidNotFound()
 void DeleteStudent()
 {
 	cout << endl;
-	char c;
+	char c = ' ';
 	bool ck = false;
 	library* s = SearchStudent();
 	if (s == NULL) return;
@@ -352,8 +454,7 @@ void DeleteStudent()
 		cin >> c;
 		while (getchar() != '\n');
 		ck = true;
-	}
-	while (c != 'Y' && c != 'N');
+	} while (c != 'Y' && c != 'N');
 	if (c == 'Y')
 	{
 		library* p = LHead;
@@ -381,32 +482,13 @@ void DeleteStudent()
 	}
 	else cout << "已取消" << endl;
 	cout << endl;
-	/*
-	cout << endl;
-	char c;
-	int k = SerchStudent();
-	bool ck = false;
-	if (k==-1) return;
-	Student &s = *p[k];
-	s.ViewData();
-	cout << "您真的要删除吗？（该操作不可恢复）";
-	cout << "（Y：是，N：否）" << endl;
-	do
-	{
-		if (ck) cout << "输入有误，请重新输入：" << endl;
-		cin >> c;
-		while (getchar()!='\n');
-		ck = true;
-	}
-	while(c!='Y'&&c!='N');
-	*/
 }
 
 void ModStudent()
 {
 	cout << endl;
 	library* s = SearchStudent();
-	char c;
+	char c = ' ';
 	bool ck = false;
 	bool change;
 	if (s == NULL)
@@ -423,7 +505,7 @@ void ModStudent()
 		cin >> c;
 		while (getchar() != '\n');
 		ck = true;
-	} 	while (c != 'Y' && c != 'N');
+	} while (c != 'Y' && c != 'N');
 	if (c == 'Y')
 	{
 		change = s->s.ChangeData();
@@ -454,5 +536,40 @@ void SumStudent()
 	cout << endl;
 	cout << "学生总数为：";
 	cout << Student::sum << endl;
+	cout << endl;
+}
+
+void Set()
+{
+	cout << endl;
+	char c = ' ';
+	char set = ' ';
+	bool b = false;
+	cout << "请选择修改的设置项：" << endl;
+	cout << "（D：详细信息模式）" << endl;
+	do
+	{
+		cin >> c;
+		while (getchar() != '\n');
+	} while (c != 'D');
+	if (c == 'D')
+	{
+		cout << "要打开详细信息模式吗？（O：打开  C：关闭）" << endl;
+		do
+		{
+			cin >> set;
+			while (getchar() != '\n');
+		} while (set != 'O' && set != 'C');
+		if (set == 'O')
+		{
+			Student::detail = true;
+			cout << "详细信息模式已打开！" << endl;
+		}
+		if (set == 'C')
+		{
+			Student::detail = false;
+			cout << "详细信息模式已关闭！" << endl;
+		}
+	}
 	cout << endl;
 }

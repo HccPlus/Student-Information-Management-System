@@ -1,4 +1,5 @@
 #include<iostream>
+#include<fstream>
 #include<string.h>
 
 using namespace std;
@@ -133,7 +134,7 @@ public:
 		bool change = false;
 		cout << endl;
 		cout << "请输入要写入的数据：";
-		cout << "（A：基本数据，N：姓名，G：性别，B：学号，C：班级，D：详细信息，L：取消写入）" << endl;
+		cout << "（A：全部基本数据，N：姓名，G：性别，B：学号，C：班级，D：详细信息）" << endl;
 		do
 		{
 			if (ck) cout << "输入有误，请重新输入：" << endl;
@@ -147,7 +148,6 @@ public:
 		if (c == 'B' || c == 'A') ChangeNumber();
 		if (c == 'C' || c == 'A') ChangeClassAndGrade();
 		if (c == 'D') ChangeDetail();
-		if (c == 'L') cout << "已取消" << endl;
 		else
 		{
 			change = true;
@@ -194,6 +194,19 @@ public:
 		cout << endl;
 	}
 
+	void SaveInformation()
+	{
+		ofstream outfile;
+		outfile.open("Information.dat", ios::app);
+		outfile << "Data" << endl;
+		outfile << name << endl;
+		outfile << gender << endl;
+		outfile << number << endl;
+		outfile << ClassAndGrade << endl;
+		outfile << birthday << endl;
+		outfile.close();
+	}
+
 	~Student()//学生类析构函数 
 	{
 		sum--;
@@ -222,32 +235,45 @@ void DidNotFound();
 
 void DeleteStudent();//删除学生的函数
 
+void AutoDeleteStudent(library* s);
+
 void ModStudent();
 
 void LookStudent();
 
 void SumStudent();
 
+void DeleteAll();
+
 void Set();
+
+void ReadSet();
+
+void Save();
+
+void Read(bool IsAuto);
 
 int main()
 {
 	char c = ' ';//用于判断用户想要进行的操作 
 	cout << "欢迎使用Voyage学生信息管理系统！" << endl << endl;
+	Read(true);
+	ReadSet();
 	do
 	{
 		cout << endl;
 		bool ck = false;
 		cout << "您想进行什么操作？" << endl;;
-		cout << "（A：添加学生  D：删除学生  M：修改学生信息  L：查看单个学生信息";
-		cout << "  V：显示所有学生信息  S：查看学生总数  T：设置  C：关闭程序）" << endl;
+		cout << "（A：添加学生  D：删除学生  M：修改学生信息";
+		cout << "  L：查看单个学生信息  V：显示所有学生信息  S：查看学生总数";
+		cout << "  T：设置  E：保存  R：读档  C：关闭程序）" << endl;
 		do
 		{
 			if (ck) cout << "输入有误，请重新输入：" << endl;
 			cin >> c;
 			while (getchar() != '\n');
 			ck = true;
-		} while (c != 'A' && c != 'D' && c != 'M' && c != 'L' && c != 'V' && c != 'S' && c != 'C' && c != 'T');
+		} while (c != 'A' && c != 'D' && c != 'M' && c != 'L' && c != 'V' && c != 'S' && c != 'C' && c != 'T' && c != 'E' && c != 'R');
 		if (c == 'A') AddStudent();
 		else if (c == 'D') DeleteStudent();
 		else if (c == 'M') ModStudent();
@@ -255,14 +281,13 @@ int main()
 		else if (c == 'V') ViewAllData();
 		else if (c == 'S') SumStudent();
 		else if (c == 'T') Set();
+		else if (c == 'E') Save();
+		else if (c == 'R') Read(false);
 		else if (c == 'C')
 		{
 			char close = ' ';
 			bool ck = false;
-			cout << "！！！警告！！！" << endl;
-			cout << "您真的要关闭程序吗？";
-			cout << "该操作会删除所有学生数据，";
-			cout << "且无法恢复！！！" << endl;
+			cout << "确认关闭吗？" << endl;
 			cout << "（Y：确认关闭，N：手滑了，取消关闭）" << endl;
 			do
 			{
@@ -275,8 +300,9 @@ int main()
 			cout << endl;
 		}
 	} while (c != 'C');
-
-	cout << "程序关闭，信息已删除。" << endl;
+	Save();
+	DeleteAll();
+	cout << "程序已关闭。" << endl;
 	return 0;
 }
 
@@ -293,7 +319,7 @@ void InputNum(int& x)
 			cin.clear();
 			cin.get();
 		}
-	} 	while (!suc);
+	} while (!suc);
 }
 
 void InputNum(long long& x)
@@ -327,7 +353,7 @@ void InputNum(int& x, int min, int max)
 			cin.clear();
 			cin.get();
 		}
-	} while (!suc && x>=min &&x<=max);
+	} while (!suc && x >= min && x <= max);
 }
 
 void ViewAllData()
@@ -381,8 +407,8 @@ library* SearchStudent()
 			char* name = new char[8];
 			cout << "请输入学生姓名：" << endl;
 			cin >> name;
-			while (getchar()!='\n');
-			while(p)//遍历所有对象
+			while (getchar() != '\n');
+			while (p)//遍历所有对象
 			{
 				if (strcmp(p->s.ReturnName(), name))
 				{
@@ -484,6 +510,32 @@ void DeleteStudent()
 	cout << endl;
 }
 
+void AutoDeleteStudent(library* s)
+{
+	library* p = LHead;
+	if (Student::sum == 1)
+	{
+		delete p;
+		cout << "该学生已删除！" << endl;
+	}
+	else if (p == s)
+	{
+		LHead = p->next;
+		delete p;
+		cout << "该学生已删除！" << endl;
+	}
+	/*else
+	{
+		while (p->next != s)
+		{
+			p = p->next;
+		}
+		p->next = s->next;
+		delete s;
+		cout << "该学生已删除！" << endl;
+	}*/
+}
+
 void ModStudent()
 {
 	cout << endl;
@@ -528,7 +580,6 @@ void LookStudent()
 		s->s.ViewData();
 		cout << endl;
 	}
-
 }
 
 void SumStudent()
@@ -539,24 +590,51 @@ void SumStudent()
 	cout << endl;
 }
 
+void DeleteAll()
+{
+	/*
+	library* p = LHead;
+	while (LHead)
+	{
+		p = LHead;
+		
+		library* q = p->next;
+		AutoDeleteStudent(p);
+		while (q)
+		{
+			p = q;
+			q = q->next;
+			AutoDeleteStudent(p);
+		}
+	}*/
+	LHead = NULL;
+	Student::sum = 0;
+}
+
 void Set()
 {
 	cout << endl;
 	char c = ' ';
 	char set = ' ';
 	bool b = false;
+	bool again = false;
 	cout << "请选择修改的设置项：" << endl;
 	cout << "（D：详细信息模式）" << endl;
 	do
 	{
+		if (again) cout << "输入错误，请重新输入：" << endl;
+		again = true;
 		cin >> c;
 		while (getchar() != '\n');
 	} while (c != 'D');
 	if (c == 'D')
 	{
+		bool again = false;
 		cout << "要打开详细信息模式吗？（O：打开  C：关闭）" << endl;
 		do
 		{
+			if (again) cout << "输入错误，请重新输入：" << endl;
+			again = true;
 			cin >> set;
 			while (getchar() != '\n');
 		} while (set != 'O' && set != 'C');
@@ -570,6 +648,144 @@ void Set()
 			Student::detail = false;
 			cout << "详细信息模式已关闭！" << endl;
 		}
+		ofstream outfile;
+		outfile.open("setting.dat");
+		outfile << c << endl << set << endl;
+		outfile.close();
 	}
 	cout << endl;
+}
+
+void ReadSet()
+{
+	char detail = ' ';
+	char details = ' ';
+	ifstream infile;
+	infile.open("setting.dat");
+	infile >> detail >> details;
+	if (detail == 'D' && details == 'O')
+	{
+		Student::detail = true;
+	}
+	else if (detail == 'D' && details == 'C')
+	{
+		Student::detail = false;
+	}
+	else cout << "设置项读取失败！" << endl;
+	infile.close();
+}
+
+void Save()
+{
+	cout << endl;
+	library* p = LHead;
+	bool again = false;//定义变量判断循环是否执行过
+	char c = ' ';
+	cout << "确认保存吗？该操作将覆盖原有的数据！" << endl;
+	cout << "（Y：是  N：否）" << endl;
+	do
+	{
+		if (again) cout << "输入错误，请重新输入：" << endl;
+		again = true;
+		cin >> c;
+	} while (c != 'Y' && c != 'N');
+	if (c == 'Y')
+	{
+		ofstream outfile;
+		outfile.open("Information.dat", ios::trunc);
+		outfile.close();
+		if (Student::sum != 0)
+		{
+			while (p)
+			{
+				p->s.SaveInformation();
+				p = p->next;
+			}
+		}
+		outfile.open("Information.dat", ios::app);
+		outfile << "End" << endl;
+		outfile.close();
+		cout << "保存完成！" << endl;
+	}
+	else cout << "已取消" << endl;
+	cout << endl;
+}
+
+void Read(bool IsAuto)
+{
+	if (!IsAuto) cout << endl;
+	char c = ' ';
+	if (!IsAuto)
+	{
+		bool again = false;
+		cout << "确认读档吗？该操作将覆盖原有数据！" << endl;
+		cout << "（Y：是  N：否）" << endl;
+		do
+		{
+			if (again) cout << "输入错误，请重新输入：" << endl;
+			again = true;
+			cin >> c;
+		} while (c != 'Y' && c != 'N');
+	}
+	if (IsAuto || c == 'Y')
+	{
+		DeleteAll();
+		char* check = new char[4];
+		char* name = new char[8];//姓名 
+		char gender;//性别（M：男，F：女，U：未知） 
+		long long number;//学号 
+		char* ClassAndGrade = new char[16];//班级
+		int birthday;
+		ifstream infile;
+		infile.open("Information.dat");
+		while (true)
+		{
+			infile >> check;
+			if (!strcmp(check, "Data"))//如果读取内容为“Data”
+			{
+
+				infile >> name >> gender >> number >> ClassAndGrade >> birthday;
+				library* p = new library;
+				Student stu(name, gender, number, ClassAndGrade, birthday);
+
+				p->s = stu;
+				p->next = LHead;
+				LHead = p;
+			}
+			else if (!strcmp(check, "End"))//如果读取内容为“End”
+			{
+				cout << "存档读取完成！" << endl;
+				break;
+			}
+			else
+			{
+				char c = ' ';
+				bool again = false;
+				cout << "存档文件出错！" << endl;
+				cout << "要重置存档吗？这将清除一切数据！" << endl;
+				cout << "（Y：是  N：否）" << endl;
+				do
+				{
+					if (again) cout << "输入错误，请重新输入：" << endl;
+					again = true;
+					cin >> c;
+					while (getchar() != '\n');
+				} while (c != 'Y' && c != 'N');
+				if (c == 'Y')
+				{
+					ofstream outfile;
+					outfile.open("Information.dat", ios::trunc);
+					outfile << "End" << endl;
+					outfile.close();
+					Read(true);
+				}
+				break;
+			}
+		}
+		infile.close();
+		delete[] name;
+		delete[] ClassAndGrade;
+	}
+	else cout << "已取消" << endl;
+	if (!IsAuto) cout << endl;
 }
